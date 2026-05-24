@@ -5,7 +5,7 @@ const app = express();
 app.use(express.json());
 
 const redisClient = createClient({
-    url: 'redis://localhost:6379'
+    url: 'redis://redis-service:6379'
 });
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
@@ -38,7 +38,7 @@ app.post('/api/routes', async (req: Request, res: Response) => {
 });
 
 const PORT = 3000;
-app.listen(PORT, async () => {
+app.listen(PORT, '0.0.0.0', async () => {
     await redisClient.connect();
-    console.log(`Control Plane API running on http://localhost:${PORT}`);
+    console.log(`Control Plane API running on port ${PORT}`);
 });

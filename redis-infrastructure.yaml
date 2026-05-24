@@ -15,5 +15,26 @@ spec:
       containers:
       - name: redis
         image: redis:6.2-alpine
+        command: ["redis-server", "--appendonly", "yes"]
         ports:
         - containerPort: 6379
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: redis-data-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    infrastructure: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
